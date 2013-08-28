@@ -96,12 +96,7 @@ endif
 " Plugin Config "
 "---------------"
 " Ack
-if executable('ack') || executable('ag')
-    if executable('ag')
-        let g:actprg="ag --nogroup --smart-case --follow"
-    endif
-    map <leader>/ :Ack 
-endif
+let g:actprg="ag --nogroup --smart-case --follow --column"
 
 " Rainbow Parentheses
 au Syntax * RainbowParenthesesLoadRound
@@ -160,8 +155,8 @@ nmap <silent><leader>to :CtrlP<CR>
 nmap <silent><leader>tb :CtrlPBuffer<CR>
 nmap <silent><leader>tu :CtrlPMRU<CR>
 nmap <silent><leader>ta :CtrlPMixed<CR>
-nmap <silent><leader>rt :RainbowParenthesesToggle
-"<leader>/ :Ack <- defined above if usable
+nmap <silent><leader>rt :RainbowParenthesesToggle<CR>
+nmap <leader>/ :Ag 
 
 " Toggles
 noremap <silent><F4> :set list!<CR>

@@ -43,3 +43,6 @@
 [submodule "bundle/color-hybrid"]
 	path = bundle/color-hybrid
 	url = https://github.com/w0ng/vim-hybrid
+[submodule "bundle/ag"]
+	path = bundle/ag
+	url = https://github.com/rking/ag.vim
