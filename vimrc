@@ -90,35 +90,77 @@ if $COLORTERM == ('gnome-terminal' || 'xterm')
     set t_Co=256
 endif
 
-" Mappings
+"""""""""""""""""
+" Plugin Config "
+"---------------"
+" Ack
+if executable('ack') || executable('ag')
+    if executable('ag')
+        let g:actprg="ag --nogroup --smart-case --follow"
+    endif
+    map <leader>/ :Ack 
+endif
+
+" Rainbow Parentheses
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+" SmartSwap
+let g:SmartSwap_CheckDate = 1
+let g:SmartSwap_CheckDiff = 1
+
+" SuperTab
+let g:SuperTabDefaultCompletionType="context"
+
+" Syntastic
+let g:syntastic_python_checkers=['pyflakes']
+
+""""""""""""
+" Mappings "
+"----------"
 let mapleader=","
 
 cmap ` ~/
 
-" arrow keys switch buffers/tabs
+" Arrow keys
 nnoremap <down> :bprevious<CR>
 nnoremap <up> :bnext<CR>
 nnoremap <left> :tabnext<CR>
 nnoremap <right> :tabprevious<CR>
 
-" space clears highlighting from search
+" Space clears highlighting from search
 noremap <silent> <Space> :silent nohl<Bar>echo<CR>
 
-" leader direction to switch splits
+" Movement/Scrolling
+nnoremap <C-e> 4<C-e>
+nnoremap <C-y> 4<C-y>
+noremap j gj
+noremap k gk
+
+" Leader Commands
 map <silent><leader>h <C-w>h
 map <silent><leader>j <C-w>j
 map <silent><leader>k <C-w>k
 map <silent><leader>l <C-w>l
+nmap <silent><leader>c \\
+vmap <silent><leader>c \\
+nmap <silent><leader>C \\u
+vmap <silent><leader>C \\u
+nmap <silent><leader>fs :NoTrail<CR>
+nmap <silent><leader>sc :close<CR>
+nmap <silent><leader>sh :split<CR>
+nmap <silent><leader>sv :vsplit<CR>
+nmap <silent><leader>sq :QFixToggle<CR>
+nmap <silent><leader>tn :tabnew<CR>
+nmap <silent><leader>tc :tabclose<CR>
+nmap <silent><leader>to :CtrlP<CR>
+nmap <silent><leader>tb :CtrlPBuffer<CR>
+nmap <silent><leader>tu :CtrlPMRU<CR>
+nmap <silent><leader>ta :CtrlPMixed<CR>
+"<leader>/ :Ack <- defined above if usable
 
-" Scroll 4 Lines at a time
-nnoremap <C-e> 4<C-e>
-nnoremap <C-y> 4<C-y>
-
-" visual movement of j and k
-noremap j gj
-noremap k gk
-
-" toggle list chars
+" Toggles
 noremap <silent><F4> :set list!<CR>
 inoremap <silent><F4> :set list!<CR>
-
