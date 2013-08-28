@@ -10,7 +10,7 @@ runtime macros/editexisting.vim
 
 " Display/Behavior
 set cursorline
-set foldmethod=indent
+set foldmethod=syntax
 set hidden
 set history=500
 set hlsearch
@@ -61,7 +61,8 @@ set nospell
 
 " Looks
 syntax on
-colorscheme jellybeans
+let g:hybrid_use_Xresources = 1
+colorscheme hybrid
 set list listchars=tab:»\ ,trail:­,nbsp:­
 
 " Make MatchPairs not look like cursor
@@ -70,6 +71,7 @@ hi MatchParen term=underline cterm=underline,bold, gui=underline,bold
 
 " Statusline
 set laststatus=2
+set statusline=%1*#%n%*\ %f%2*%m%r%*\ %3*%y%*%=%02.v\|%03.l/%03.L
 hi link User1 Number
 hi link User2 Boolean
 hi link User3 Identifier
@@ -102,7 +104,6 @@ if executable('ack') || executable('ag')
 endif
 
 " Rainbow Parentheses
-au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
@@ -159,6 +160,7 @@ nmap <silent><leader>to :CtrlP<CR>
 nmap <silent><leader>tb :CtrlPBuffer<CR>
 nmap <silent><leader>tu :CtrlPMRU<CR>
 nmap <silent><leader>ta :CtrlPMixed<CR>
+nmap <silent><leader>rt :RainbowParenthesesToggle
 "<leader>/ :Ack <- defined above if usable
 
 " Toggles

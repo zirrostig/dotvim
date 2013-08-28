@@ -40,3 +40,6 @@
 [submodule "bundle/ctrlp"]
 	path = bundle/ctrlp
 	url = https://github.com/kien/ctrlp.vim
+[submodule "bundle/color-hybrid"]
+	path = bundle/color-hybrid
+	url = https://github.com/w0ng/vim-hybrid
