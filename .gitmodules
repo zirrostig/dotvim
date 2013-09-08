@@ -67,3 +67,6 @@
 [submodule "bundle/neocomplete"]
 	path = bundle/neocomplete
 	url = https://github.com/Shougo/neocomplete.vim.git
+[submodule "bundle/gnupg"]
+	path = bundle/gnupg
+	url = https://github.com/jamessan/vim-gnupg

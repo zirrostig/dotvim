@@ -92,6 +92,11 @@ if $COLORTERM == ('gnome-terminal' || 'xterm')
     set t_Co=256
 endif
 
+""""""""""""""""""""""""""""""""
+" Autocmds for whatever reason "
+""""""""""""""""""""""""""""""""
+au BufRead,BufNewFile /tmp/mutt* set ft=mail
+
 """""""""""""""""
 " Plugin Config "
 "---------------"
