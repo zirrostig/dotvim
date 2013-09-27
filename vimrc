@@ -95,13 +95,13 @@ endif
 """"""""""""""""""""""""""""""""
 " Autocmds for whatever reason "
 """"""""""""""""""""""""""""""""
-au BufRead,BufNewFile /tmp/mutt* set ft=mail
+au BufRead,BufNewFile /tmp/mutt* set ft=mail spell
 
 """""""""""""""""
 " Plugin Config "
 "---------------"
 " Ack
-let g:actprg="ag --nogroup --smart-case --follow --column"
+let g:agprg="ag --nogroup --smart-case --follow --column"
 
 " Rainbow Parentheses
 au Syntax * RainbowParenthesesLoadRound
