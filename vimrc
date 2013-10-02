@@ -121,6 +121,23 @@ let g:syntastic_python_checkers=['pyflakes']
 " NeoComplete
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#cancel_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#cancel_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#cancel_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
+" Close popup by <Space>.
+inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " Supertab
 let g:SuperTabDefaultCompletionType = "context"
@@ -151,10 +168,10 @@ noremap j gj
 noremap k gk
 
 " Leader Commands
-map <silent><leader>h <C-w>h
-map <silent><leader>j <C-w>j
-map <silent><leader>k <C-w>k
-map <silent><leader>l <C-w>l
+map <silent><leader>wh <C-w>h
+map <silent><leader>wj <C-w>j
+map <silent><leader>wk <C-w>k
+map <silent><leader>wl <C-w>l
 nmap <silent><leader>c \\
 vmap <silent><leader>c \\
 nmap <silent><leader>C \\u
