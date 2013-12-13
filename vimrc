@@ -10,7 +10,7 @@ runtime macros/editexisting.vim
 
 " Display/Behavior
 set cursorline
-set foldmethod=syntax
+"set foldmethod=syntax
 set hidden
 set history=500
 set hlsearch
@@ -18,6 +18,7 @@ set incsearch
 set nomore
 set nowrap
 set number
+set relativenumber
 set pumheight=8
 set ruler
 set scrolloff=4
@@ -115,9 +116,6 @@ let g:SmartSwap_CheckDiff = 1
 " SuperTab
 let g:SuperTabDefaultCompletionType="context"
 
-" Syntastic
-let g:syntastic_python_checkers=['pyflakes']
-
 " NeoComplete
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
@@ -132,7 +130,7 @@ inoremap <expr><BS> neocomplete#cancel_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplete#cancel_popup()
 inoremap <expr><C-e>  neocomplete#cancel_popup()
 " Close popup by <Space>.
-inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+" inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS

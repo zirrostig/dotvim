@@ -1,5 +1,5 @@
-set tabstop=2
-set shiftwidth=2
+setl tabstop=2
+setl shiftwidth=2
 
 "HDevTools mappings and settings
 let g:hdevtools_options = '-g-Wall'

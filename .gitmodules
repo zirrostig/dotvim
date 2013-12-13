@@ -73,3 +73,12 @@
 [submodule "bundle/hdevtools"]
 	path = bundle/hdevtools
 	url = https://github.com/bitc/vim-hdevtools.git
+[submodule "bundle/jack-syntax"]
+	path = bundle/jack-syntax
+	url = git@github.com:zirrostig/vim-jack-syntax.git
+[submodule "bundle/betterdigraphs"]
+	path = bundle/betterdigraphs
+	url = https://github.com/atweiden/vim-betterdigraphs.git
+[submodule "bundle/dragvisuals"]
+	path = bundle/dragvisuals
+	url = https://github.com/atweiden/vim-dragvisuals.git
