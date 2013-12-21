@@ -4,10 +4,10 @@ So lots of things here, but it makes me productive.
 
 Install
 -------
-git clone git://github.com/zirrostig/dotvim.git ~/.vim
-cd ~/.vim
-git submodule init
-git submodule update
-ln -s ~/.vim/vimrc ~/.vimrc
-mkdir -p ~/.vimlocal/{swap,undo}
+1. git clone git://github.com/zirrostig/dotvim.git ~/.vim
+2. cd ~/.vim
+3. git submodule init
+4. git submodule update
+5. ln -s ~/.vim/vimrc ~/.vimrc
+6. mkdir -p ~/.vimlocal/{swap,undo}
 
