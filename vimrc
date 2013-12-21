@@ -7,6 +7,8 @@ filetype plugin indent on
 " Builtin macros - Why are these not defaults
 runtime macros/matchit.vim
 runtime macros/editexisting.vim
+" Other Macros
+runtime plugin/dragvisuals.vim
 
 " Display/Behavior
 set cursorline
@@ -143,6 +145,23 @@ let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
 let g:SuperTabContextTextOmniPrecedence = ['&omnifunc' , '&completefunc']
 let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 
+" HiJump ~/.vim/plugin/hijump.vim
+" This rewires n and N to do the highlighing...
+" nnoremap <silent> n   n:call HLNext(0.4)<cr>
+" nnoremap <silent> N   N:call HLNext(0.4)<cr>
+
+" HUDigraphs.vim
+" inoremap <expr> <C-K> HUDG_GetDigraph()
+
+" DrapVisuals.vim
+vmap <expr> <LEFT>  DVB_Drag('left')
+vmap <expr> <RIGHT> DVB_Drag('right')
+vmap <expr> <DOWN>  DVB_Drag('down')
+vmap <expr> <UP>    DVB_Drag('up')
+vmap <expr> D       DVB_Duplicate()
+"   Remove any introduced trailing whitespace after moving...
+let g:DVB_TrimWS = 1
+
 """"""""""""
 " Mappings "
 "----------"
@@ -186,8 +205,14 @@ nmap <silent><leader>tb :CtrlPBuffer<CR>
 nmap <silent><leader>tu :CtrlPMRU<CR>
 nmap <silent><leader>ta :CtrlPMixed<CR>
 nmap <silent><leader>rt :RainbowParenthesesToggle<CR>
-nmap <leader>/ :Ag 
+nmap <leader>/ :Ag
 
 " Toggles
 noremap <silent><F4> :set list!<CR>
 inoremap <silent><F4> :set list!<CR>
+
+" Swaps
+nnoremap    v   <C-V>
+nnoremap <C-V>     v
+vnoremap    v   <C-V>
+vnoremap <C-V>     v
