@@ -76,3 +76,6 @@
 [submodule "bundle/jack-syntax"]
 	path = bundle/jack-syntax
 	url = git@github.com:zirrostig/vim-jack-syntax.git
+[submodule "bundle/repaste"]
+	path = bundle/repaste
+	url = git@github.com:zirrostig/vim-repaste.git

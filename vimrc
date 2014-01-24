@@ -8,7 +8,7 @@ filetype plugin indent on
 runtime macros/matchit.vim
 runtime macros/editexisting.vim
 " Other Macros
-runtime plugin/dragvisuals.vim
+" runtime plugin/dragvisuals.vim
 
 " Display/Behavior
 set cursorline
@@ -154,13 +154,13 @@ let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc
 " inoremap <expr> <C-K> HUDG_GetDigraph()
 
 " DrapVisuals.vim
-vmap <expr> <LEFT>  DVB_Drag('left')
-vmap <expr> <RIGHT> DVB_Drag('right')
-vmap <expr> <DOWN>  DVB_Drag('down')
-vmap <expr> <UP>    DVB_Drag('up')
-vmap <expr> D       DVB_Duplicate()
-"   Remove any introduced trailing whitespace after moving...
-let g:DVB_TrimWS = 1
+" vmap <expr> <LEFT>  DVB_Drag('left')
+" vmap <expr> <RIGHT> DVB_Drag('right')
+" vmap <expr> <DOWN>  DVB_Drag('down')
+" vmap <expr> <UP>    DVB_Drag('up')
+" vmap <expr> D       DVB_Duplicate()
+" "   Remove any introduced trailing whitespace after moving...
+" let g:DVB_TrimWS = 1
 
 """"""""""""
 " Mappings "
