@@ -1,7 +1,43 @@
-"{{{ Super important
-set nocompatible
-call pathogen#infect()
-call pathogen#helptags()
+"{{{ Startup and Bundles
+if has("vim_starting")
+    set nocompatible
+    " call pathogen#infect()
+    " call pathogen#helptags()
+    set runtimepath+=~/.vim/bundle/neobundle.vim
+endif
+"}}}
+"{{{ NeoBundle
+call neobundle#rc(expand('~/.vim/bundle'))
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+NeoBundle 'bitc/vim-hdevtools'
+NeoBundle 'dag/vim2hs'
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'ervandew/supertab'
+NeoBundle 'jamessan/vim-gnupg'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'rking/ag.vim'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'tpope/vim-abolish'
+NeoBundle 'tpope/vim-commentary'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'travitch/hasksyn'
+NeoBundle 'ujihisa/neco-ghc'
+NeoBundle 'vim-scripts/a.vim'
+NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'zirrostig/vim-jack-syntax'
+NeoBundle 'zirrostig/vim-repaste'
+NeoBundle 'zirrostig/vim-schlepp'
+NeoBundle 'zirrostig/vim-smart-swap'
+
 filetype plugin indent on
 "}}}
 "{{{ Builtin macros - Why are these not defaults
@@ -12,12 +48,15 @@ runtime! macros/editexisting.vim
 " runtime plugin/dragvisuals.vim
 "}}}
 "{{{  Display/Behavior
-set cursorline
+if $TERM ==? "rxvt-unicode-256color"
+    set cursorline
+endif
 set foldmethod=marker
 set hidden
 set history=500
 set hlsearch
 set incsearch
+set nojoinspaces
 set nomore
 set nowrap
 set number
@@ -65,9 +104,13 @@ set nospell
 "}}}
 "{{{ Looks
 syntax on
-let g:hybrid_use_Xresources = 1
-colorscheme hybrid
-set list listchars=tab:»\ ,trail:␣,nbsp:␣
+if $TERM ==? "rxvt-unicode-256color"
+    let g:hybrid_use_Xresources = 1
+    set list listchars=tab:»\ ,trail:␣,nbsp:␣
+    colorscheme hybrid
+else
+    colorscheme desert
+endif
 
 " Make MatchPairs not look like cursor
 hi clear MatchParen
@@ -92,7 +135,7 @@ if has('gui_running')
 endif
 "}}}
 "{{{ Hack for stupid terminals
-if $COLORTERM == ('gnome-terminal' || 'xterm')
+if $COLORTERM ==? ('gnome-terminal' || 'xterm')
     set t_Co=256
 endif
 "}}}
@@ -100,25 +143,24 @@ endif
 au BufRead,BufNewFile /tmp/mutt* set ft=mail spell
 "}}}
 "{{{ Plugins
+"{{{ Netrw - Builtin to vim
+
+"}}}
 "{{{ Ack
 let g:agprg="ag --nogroup --smart-case --follow --column"
 "}}}
-
 "{{{ Rainbow Parentheses
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 "}}}
-
 "{{{ SmartSwap
 let g:SmartSwap_CheckDate = 1
 let g:SmartSwap_CheckDiff = 1
 "}}}
-
 "{{{ SuperTab
 let g:SuperTabDefaultCompletionType="context"
 "}}}
-
 "{{{ NeoComplete
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
@@ -140,24 +182,20 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 "}}}
-
 "{{{ Supertab
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
 let g:SuperTabContextTextOmniPrecedence = ['&omnifunc' , '&completefunc']
 let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 "}}}
-
 "{{{ HiJump ~/.vim/plugin/hijump.vim
 " This rewires n and N to do the highlighing...
 " nnoremap <silent> n   n:call HLNext(0.4)<cr>
 " nnoremap <silent> N   N:call HLNext(0.4)<cr>
 "}}}
-
 "{{{ HUDigraphs.vim
 " inoremap <expr> <C-K> HUDG_GetDigraph()
 "}}}
-
 "{{{ DrapVisuals.vim
 " vmap <expr> <LEFT>  DVB_Drag('left')
 " vmap <expr> <RIGHT> DVB_Drag('right')
@@ -167,9 +205,18 @@ let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc
 " "   Remove any introduced trailing whitespace after moving...
 " let g:DVB_TrimWS = 1
 "}}}
-
 "{{{ Schlepp
-runtime $HOME/sob/vim-schlepp/plugin/schlepp.vim
+vmap <unique> <up>    <Plug>SchleppUp
+vmap <unique> <down>  <Plug>SchleppDown
+vmap <unique> <left>  <Plug>SchleppLeft
+vmap <unique> <right> <Plug>SchleppRight
+
+vmap <unique> i <Plug>SchleppToggleReindent
+
+vmap <unique> Dk <Plug>SchleppDupUp
+vmap <unique> Dj <Plug>SchleppDupDown
+vmap <unique> Dh <Plug>SchleppDupLeft
+vmap <unique> Dl <Plug>SchleppDupRight
 "}}}
 "}}} End Plugins
 "{{{ Mappings
@@ -182,58 +229,53 @@ nmap ? ?\v
 "{{{ Arrow keys
 nnoremap <down> :bprevious<CR>
 nnoremap <up> :bnext<CR>
-nnoremap <left> :tabnext<CR>
-nnoremap <right> :tabprevious<CR>
+nnoremap <left> :tabprevious<CR>
+nnoremap <right> :tabnext<CR>
 "}}}
-
 "{{{ Space clears highlighting from search
 noremap <silent> <Space> :silent nohl<Bar>echo<CR>
 "}}}
-
 "{{{ Movement/Scrolling
 nnoremap <C-e> 4<C-e>
 nnoremap <C-y> 4<C-y>
 noremap j gj
 noremap k gk
 "}}}
-
 "{{{ Leader Commands
-noremap <silent><leader>wh <C-w>h
-noremap <silent><leader>wj <C-w>j
-noremap <silent><leader>wk <C-w>k
-noremap <silent><leader>wl <C-w>l
-nnoremap <silent><leader>c \\
-vnoremap <silent><leader>c \\
+nnoremap <leader>/ :Ag
 nnoremap <silent><leader>C \\u
-vnoremap <silent><leader>C \\u
-nnoremap <silent><leader>ve :vsplit $MYVIMRC<CR>
-nnoremap <silent><leader>vs :source $MYVIMRC<CR>
+nnoremap <silent><leader>c \\
 nnoremap <silent><leader>fs :NoTrail<CR>
 nnoremap <silent><leader>ig :IndentGuidesToggle<CR>
+nnoremap <silent><leader>rt :RainbowParenthesesToggle<CR>
 nnoremap <silent><leader>sc :close<CR>
 nnoremap <silent><leader>sh :split<CR>:bnext<CR>
-nnoremap <silent><leader>sv :vsplit<CR>:bnext<CR>
 nnoremap <silent><leader>sq :QFixToggle<CR>
-nnoremap <silent><leader>tn :tabnew<CR>
-nnoremap <silent><leader>tc :tabclose<CR>
-nnoremap <silent><leader>to :CtrlP<CR>
-nnoremap <silent><leader>tb :CtrlPBuffer<CR>
-nnoremap <silent><leader>tu :CtrlPMRU<CR>
+nnoremap <silent><leader>sv :vsplit<CR>:bnext<CR>
 nnoremap <silent><leader>ta :CtrlPMixed<CR>
-nnoremap <silent><leader>rt :RainbowParenthesesToggle<CR>
-nnoremap <leader>/ :Ag
+nnoremap <silent><leader>tb :CtrlPBuffer<CR>
+nnoremap <silent><leader>tc :tabclose<CR>
+nnoremap <silent><leader>tn :tabnew<CR>
+nnoremap <silent><leader>to :CtrlP<CR>
+nnoremap <silent><leader>tu :CtrlPMRU<CR>
+nnoremap <silent><leader>ve :vsplit $MYVIMRC<CR>
+nnoremap <silent><leader>vs :source $MYVIMRC<CR>
+nnoremap <silent><leader>wh <C-w>h
+nnoremap <silent><leader>wj <C-w>j
+nnoremap <silent><leader>wk <C-w>k
+nnoremap <silent><leader>wl <C-w>l
+vnoremap <silent><leader>C \\u
+vnoremap <silent><leader>c \\
 "}}}
-
 "{{{ Toggles
 noremap <silent><F4> :set list!<CR>
 inoremap <silent><F4> :set list!<CR>
 "}}}
-
 "{{{ Swaps
 nnoremap    v   <C-V>
 nnoremap <C-V>     v
 vnoremap    v   <C-V>
 vnoremap <C-V>     v
 "}}}
-
+"}}}
 " vim: set ts=4 sw=4 et fdm=marker tw=80 fo+=t
