@@ -4,48 +4,92 @@ if has("vim_starting")
     " call pathogen#infect()
     " call pathogen#helptags()
     set runtimepath+=~/.vim/bundle/neobundle.vim
+    call neobundle#call_hook('on_source')
 endif
 "}}}
 "{{{ NeoBundle
 call neobundle#rc(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-NeoBundle 'bitc/vim-hdevtools'
-NeoBundle 'dag/vim2hs'
-NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'c9s/perlomni.vim'
 NeoBundle 'ervandew/supertab'
+NeoBundle 'hdima/python-syntax'
 NeoBundle 'jamessan/vim-gnupg'
+NeoBundle 'jeetsukumaran/vim-markology'
+NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-indent', {
+    \ 'depends' : 'kana/vim-textobj-user',
+    \ }
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundleLazy 'klen/python-mode', {
+    \ 'autoload' : { 'filetypes' : ['python'] },
+    \ }
+NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundleLazy 'nelstrom/vim-textobj-rubyblock', {
+    \ 'depends' : 'kana/vim-textobj-user',
+    \ 'autoload' : { 'filetypes' : ['ruby', 'racc'] },
+    \ }
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundle 'reedes/vim-pencil'
+NeoBundle 'Rip-Rip/clang_complete'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'Shougo/neocomplcache.vim'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'Shougo/neocomplete.vim', {
+    \ 'depends' : 'Shougo/context_filetype.vim',
+    \ 'disabled' : !has('lua'),
+    \ 'vim_version' : '7.3.885'
+    \ }
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimproc.vim', {
+    \ 'build' : {
+    \     'windows' : 'make -f make_mingw32.mak',
+    \     'cygwin' : 'make -f make_cygwin.mak',
+    \     'mac' : 'make -f make_mac.mak',
+    \     'unix' : 'make -f make_unix.mak',
+    \    },
+    \ }
+NeoBundle 'Shougo/vinarise'
+NeoBundle 'sjl/gundo.vim'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-commentary'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'travitch/hasksyn'
+NeoBundleLazy 'travitch/hasksyn', {
+    \ 'autoload' : { 'filetypes' : ['haskell'] },
+    \ }
 NeoBundle 'ujihisa/neco-ghc'
+NeoBundle 'ujihisa/neco-look'
 NeoBundle 'vim-scripts/a.vim'
+NeoBundle 'vim-scripts/alex.vim'
+NeoBundle 'vim-scripts/happy.vim'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'zirrostig/vim-jack-syntax'
-NeoBundle 'zirrostig/vim-repaste'
+NeoBundleDisable 'zirrostig/vim-repaste'
 NeoBundle 'zirrostig/vim-schlepp'
 NeoBundle 'zirrostig/vim-smart-swap'
 
+call neobundle#local("~/.vim/dev-bundle", {}, ['vim-sandbox'])
+
 filetype plugin indent on
+"}}}
+"{{{ For GVim
+if has('gui_running')
+    set guioptions=act
+    if has("balloon_eval")
+        set ballooneval
+    endif
+    set guifont=Inconsolatazi4\ 7
+endif
 "}}}
 "{{{ Builtin macros - Why are these not defaults
 runtime! macros/matchit.vim
 runtime! macros/editexisting.vim
-"}}}
-"{{{ Other Macros
-" runtime plugin/dragvisuals.vim
 "}}}
 "{{{  Display/Behavior
 if $TERM ==? "rxvt-unicode-256color"
@@ -54,7 +98,7 @@ endif
 set foldmethod=marker
 set hidden
 set history=500
-set hlsearch
+set nohlsearch
 set incsearch
 set nojoinspaces
 set nomore
@@ -75,8 +119,11 @@ set title
 set wildchar=<Tab>
 set wildmenu
 set wildmode=list:longest
+let mapleader=","
 "}}}
 "{{{ Files
+silent !mkdir -p ~/.vimlocal/swap >/dev/null 2>&1
+silent !mkdir -p ~/.vimlocal/undo >/dev/null 2>&1
 set dir=~/.vimlocal/swap
 set nobackup
 set undofile
@@ -123,19 +170,8 @@ hi link User1 Number
 hi link User2 Boolean
 hi link User3 Identifier
 "}}}
-"{{{ For GVim
-if has('gui_running')
-    set guioptions=act
-    set ballooneval
-    if hostname() == 'thwomp'
-        set guifont=peep\ 8
-    else
-        set guifont=peep\ 11
-    endif
-endif
-"}}}
 "{{{ Hack for stupid terminals
-if $COLORTERM ==? ('gnome-terminal' || 'xterm')
+if $COLORTERM ==? ('gnome-terminal' || 'xterm' || 'konsole')
     set t_Co=256
 endif
 "}}}
@@ -143,23 +179,42 @@ endif
 au BufRead,BufNewFile /tmp/mutt* set ft=mail spell
 "}}}
 "{{{ Plugins
-"{{{ Netrw - Builtin to vim
-
-"}}}
 "{{{ Ack
 let g:agprg="ag --nogroup --smart-case --follow --column"
 "}}}
-"{{{ Rainbow Parentheses
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+"{{{ EasyMotion
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
+let g:EasyMotion_keys = "aoeuidhtns-,.crpg;qjkbmwvz"
+map <leader>h <Plug>(easymotion-linebackward)
+map <leader>j <Plug>(easymotion-j)
+map <leader>k <Plug>(easymotion-k)
+map <leader>l <Plug>(easymotion-lineforward)
+nmap <leader>.f <Plug>(easymotion-s)
+nmap <leader>.t <Plug>(easymotion-bd-t)
+nmap <leader>.w <Plug>(easymotion-bd-w)
+nmap <leader>.W <Plug>(easymotion-bd-W)
+nmap <leader>.e <Plug>(easymotion-bd-e)
+nmap <leader>.E <Plug>(easymotion-bd-E)
+nmap <leader>.n <Plug>(easymotion-bd-n)
+map  <leader>./ <Plug>(easymotion-sn)
+map  <leader>.n <Plug>(easymotion-next)
+map  <leader>.N <Plug>(easymotion-prev)
+omap <leader>./ <Plug>(easymotion-tn)
 "}}}
-"{{{ SmartSwap
-let g:SmartSwap_CheckDate = 1
-let g:SmartSwap_CheckDiff = 1
+"{{{ Gundo
+nnoremap <leader>u :GundoToggle<CR>
 "}}}
-"{{{ SuperTab
-let g:SuperTabDefaultCompletionType="context"
+"{{{ Markology
+let g:markology_textlower="\t"
+let g:markology_textother="\t"
+let g:markology_textupper="\t"
+hi MarkologyHLl ctermfg=Green ctermbg=NONE guifg=Green guibg=NONE
+hi MarkologyHLu ctermfg=Cyan ctermbg=NONE guifg=Cyan guibg=NONE
+hi MarkologyHLo ctermfg=Red ctermbg=NONE guifg=Red guibg=NONE
+
 "}}}
 "{{{ NeoComplete
 let g:neocomplete#enable_at_startup = 1
@@ -169,41 +224,60 @@ if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+let g:neocomlpete#skip_auto_completion_time = ''
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#cancel_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#cancel_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplete#cancel_popup()
 inoremap <expr><C-e>  neocomplete#cancel_popup()
 " Close popup by <Space>.
-" inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+" inoremap <expr><Space> pumvisile() ? neocomplete#close_popup() : "\<Space>"
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+"clang completion
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_overwrite_completefunc = 1
+let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#force_omni_input_patterns.objc = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.objcpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:clang_complete_auto = 0
+let g:clang_auto_select = 0
+let g:clang_hl_errors = 0
+let g:clang_complete_macros = 1
+
+"let g:clang_use_library = 1
+
+
 "}}}
-"{{{ Supertab
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
-let g:SuperTabContextTextOmniPrecedence = ['&omnifunc' , '&completefunc']
-let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
+"{{{ Pencil
+let g:pencil#wrapModeDefault = 'hard'   " or 'soft'
+
+augroup pencil
+    autocmd!
+    autocmd FileType markdown call pencil#init()
+    autocmd FileType textile call pencil#init()
+    autocmd FileType text call pencil#init({'wrap': 'hard'})
+augroup END
 "}}}
-"{{{ HiJump ~/.vim/plugin/hijump.vim
-" This rewires n and N to do the highlighing...
-" nnoremap <silent> n   n:call HLNext(0.4)<cr>
-" nnoremap <silent> N   N:call HLNext(0.4)<cr>
+"{{{ Python Syntax
+let python_highlight_all = 1
 "}}}
-"{{{ HUDigraphs.vim
-" inoremap <expr> <C-K> HUDG_GetDigraph()
+"{{{ Rainbow Parentheses
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 "}}}
-"{{{ DrapVisuals.vim
-" vmap <expr> <LEFT>  DVB_Drag('left')
-" vmap <expr> <RIGHT> DVB_Drag('right')
-" vmap <expr> <DOWN>  DVB_Drag('down')
-" vmap <expr> <UP>    DVB_Drag('up')
-" vmap <expr> D       DVB_Duplicate()
-" "   Remove any introduced trailing whitespace after moving...
-" let g:DVB_TrimWS = 1
+"{{{ Repaste
+" nnoremap <silent> <leader>r <Plug>RePasteMotion
+" vnoremap <silent> <leader>r <Plug>RePasteVisual
+" let g:RePaste_DeleteRegister = "r"
 "}}}
 "{{{ Schlepp
 vmap <unique> <up>    <Plug>SchleppUp
@@ -211,21 +285,46 @@ vmap <unique> <down>  <Plug>SchleppDown
 vmap <unique> <left>  <Plug>SchleppLeft
 vmap <unique> <right> <Plug>SchleppRight
 
-vmap <unique> i <Plug>SchleppToggleReindent
+vmap <unique> i        <Plug>SchleppToggleReindent
+vmap <unique> <S-up>   <Plug>SchleppIndentUp
+vmap <unique> <S-down> <Plug>SchleppIndentDown
 
 vmap <unique> Dk <Plug>SchleppDupUp
 vmap <unique> Dj <Plug>SchleppDupDown
 vmap <unique> Dh <Plug>SchleppDupLeft
 vmap <unique> Dl <Plug>SchleppDupRight
+
+let g:Schlepp#reindent = 1
+let g:Schlepp#useShiftWidthLines = 1
+
+"}}}
+"{{{ SmartSwap
+let g:SmartSwap_CheckDate = 1
+let g:SmartSwap_CheckDiff = 1
+"}}}
+"{{{ SuperTab
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc' , '&completefunc']
+let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
+"}}}
+"{{{ Syntastic
+"C++11 default
+let g:syntastic_cpp_compiler_options = ' -std=c++11'
+
+"}}}
+"{{{ Vinarise
+let g:vinarise_enable_auto_detect = 1
 "}}}
 "}}} End Plugins
 "{{{ Mappings
-let mapleader=","
 
 cmap ` ~/
-nmap / /\v
-nmap ? ?\v
-
+" nmap / /\v
+" nmap ? ?\v
+"{{{ Overrides
+vnoremap = =gv
+"}}}
 "{{{ Arrow keys
 nnoremap <down> :bprevious<CR>
 nnoremap <up> :bnext<CR>
@@ -243,8 +342,6 @@ noremap k gk
 "}}}
 "{{{ Leader Commands
 nnoremap <leader>/ :Ag
-nnoremap <silent><leader>C \\u
-nnoremap <silent><leader>c \\
 nnoremap <silent><leader>fs :NoTrail<CR>
 nnoremap <silent><leader>ig :IndentGuidesToggle<CR>
 nnoremap <silent><leader>rt :RainbowParenthesesToggle<CR>
@@ -260,12 +357,7 @@ nnoremap <silent><leader>to :CtrlP<CR>
 nnoremap <silent><leader>tu :CtrlPMRU<CR>
 nnoremap <silent><leader>ve :vsplit $MYVIMRC<CR>
 nnoremap <silent><leader>vs :source $MYVIMRC<CR>
-nnoremap <silent><leader>wh <C-w>h
-nnoremap <silent><leader>wj <C-w>j
-nnoremap <silent><leader>wk <C-w>k
-nnoremap <silent><leader>wl <C-w>l
-vnoremap <silent><leader>C \\u
-vnoremap <silent><leader>c \\
+nnoremap <silent><leader><CR> o<Esc>
 "}}}
 "{{{ Toggles
 noremap <silent><F4> :set list!<CR>
