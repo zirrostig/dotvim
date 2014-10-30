@@ -8,10 +8,13 @@ if has("vim_starting")
 endif
 "}}}
 "{{{ NeoBundle
-call neobundle#rc(expand('~/.vim/bundle'))
+call neobundle#begin(expand('~/.vim/bundle'))
+
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+NeoBundle 'Floobits/floobits-vim'
 NeoBundle 'c9s/perlomni.vim'
+NeoBundle 'chikamichi/mediawiki.vim'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'hdima/python-syntax'
 NeoBundle 'jamessan/vim-gnupg'
@@ -33,7 +36,6 @@ NeoBundleLazy 'nelstrom/vim-textobj-rubyblock', {
     \ 'autoload' : { 'filetypes' : ['ruby', 'racc'] },
     \ }
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
-NeoBundle 'reedes/vim-pencil'
 NeoBundle 'Rip-Rip/clang_complete'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'scrooloose/syntastic'
@@ -54,6 +56,7 @@ NeoBundle 'Shougo/vimproc.vim', {
     \ }
 NeoBundle 'Shougo/vinarise'
 NeoBundle 'sjl/gundo.vim'
+NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-commentary'
 NeoBundle 'tpope/vim-fugitive'
@@ -75,6 +78,8 @@ NeoBundle 'zirrostig/vim-schlepp'
 NeoBundle 'zirrostig/vim-smart-swap'
 
 call neobundle#local("~/.vim/dev-bundle", {}, ['vim-sandbox'])
+
+call neobundle#end()
 
 filetype plugin indent on
 "}}}
@@ -204,6 +209,10 @@ map  <leader>.n <Plug>(easymotion-next)
 map  <leader>.N <Plug>(easymotion-prev)
 omap <leader>./ <Plug>(easymotion-tn)
 "}}}
+"{{{EasyAlign
+vmap <Enter> <Plug>(EasyAlign>
+nmap <Leader>a <Plug>(EasyAlign>
+"}}}
 "{{{ Gundo
 nnoremap <leader>u :GundoToggle<CR>
 "}}}
@@ -220,16 +229,23 @@ hi MarkologyHLo ctermfg=Red ctermbg=NONE guifg=Red guibg=NONE
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 " Define keyword.
+let g:neocomplete#sources#syntax#min_keyword_length = 2
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
 if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
 endif
+
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 let g:neocomlpete#skip_auto_completion_time = ''
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#cancel_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#cancel_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#cancel_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y> neocomplete#close_popup()
+inoremap <expr><C-e> neocomplete#cancel_popup()
+inoremap <expr><C-g> neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " Close popup by <Space>.
 " inoremap <expr><Space> pumvisile() ? neocomplete#close_popup() : "\<Space>"
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -238,9 +254,16 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
 "clang completion
 if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
+    let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_overwrite_completefunc = 1
 let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
@@ -253,18 +276,9 @@ let g:clang_hl_errors = 0
 let g:clang_complete_macros = 1
 
 "let g:clang_use_library = 1
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 
-"}}}
-"{{{ Pencil
-let g:pencil#wrapModeDefault = 'hard'   " or 'soft'
-
-augroup pencil
-    autocmd!
-    autocmd FileType markdown call pencil#init()
-    autocmd FileType textile call pencil#init()
-    autocmd FileType text call pencil#init({'wrap': 'hard'})
-augroup END
 "}}}
 "{{{ Python Syntax
 let python_highlight_all = 1
