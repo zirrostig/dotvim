@@ -14,19 +14,19 @@ call plug#begin('~/.vim/plugged')
 
 " Colorschemes
 Plug 'AlessandroYorba/Alduin'
-Plug 'w0ng/vim-hybrid'
 Plug 'tpope/vim-vividchalk'
+Plug 'w0ng/vim-hybrid'
 
 " Language enhancement
-Plug 'c9s/perlomni.vim'
-Plug 'hdima/python-syntax'
-Plug 'klen/python-mode'
-Plug 'chikamichi/mediawiki.vim'
-Plug 'kchmck/vim-coffee-script'
-Plug 'vim-ruby/vim-ruby'
 Plug 'artur-shaik/vim-javacomplete2'
+Plug 'c9s/perlomni.vim'
+Plug 'chikamichi/mediawiki.vim'
 Plug 'chrisbra/csv.vim'
 Plug 'hallison/vim-rdoc'
+Plug 'hdima/python-syntax'
+Plug 'kchmck/vim-coffee-script'
+Plug 'klen/python-mode'
+Plug 'vim-ruby/vim-ruby'
 " Plug 'vim-utils/vim-ruby-fold'
 Plug 'keith/rspec.vim'
 " Plug 'skwp/vim-rspec'
@@ -35,25 +35,26 @@ Plug 'keith/rspec.vim'
 Plug 'ervandew/supertab'
 
 " Misc
+Plug 'KabbAmine/zeavim.vim'
+Plug 'airblade/vim-rooter'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'guns/vim-sexp'
 Plug 'jeetsukumaran/vim-markology'
-Plug 'junegunn/vim-easy-align'
-Plug 'kien/ctrlp.vim'
-Plug 'kien/rainbow_parentheses.vim'
-Plug 'mhinz/vim-startify'
-Plug 'nathanaelkane/vim-indent-guides'
 Plug 'junegunn/goyo.vim'
-Plug 'airblade/vim-rooter'
-Plug 'mhinz/vim-signify'
-Plug 'kana/vim-textobj-user'
+Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-user'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'majutsushi/tagbar'
+Plug 'mhinz/vim-signify'
+Plug 'mhinz/vim-startify'
+Plug 'mikelue/vim-maven-plugin'
+Plug 'mileszs/ack.vim'
+Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'vim-scripts/cSyntaxAfter'
-Plug 'mikelue/vim-maven-plugin'
-Plug 'KabbAmine/zeavim.vim'
 Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
-Plug 'majutsushi/tagbar'
 
 " Syntastic
 Plug 'scrooloose/syntastic'
@@ -93,7 +94,8 @@ if has('gui_running')
     if has("balloon_eval")
         set ballooneval
     endif
-    set guifont=Inconsolatazi4\ 8
+    "set guifont=Inconsolatazi4\ 8
+    set guifont=Source\ Code\ Pro\ Medium\ 7
 endif
 
 "  Display/Behavior
@@ -163,23 +165,23 @@ syntax on
 if $TERM ==? "rxvt-unicode-256color" || has('gui_running')
     set list listchars=tab:»\ ,trail:·,nbsp:·
 endif
-if has('gui_running')
-    colorscheme alduin
-else
-    colorscheme alduin
-endif
-hi Normal ctermbg=none
 
+" Don't change backgrough color in terminal
+autocmd ColorScheme * hi Normal ctermbg=none
+" Make CursorColumn look the same as CursorLine
+autocmd ColorScheme * hi! link CursorColumn CursorLine
 " Make MatchPairs not look like cursor
-hi clear MatchParen
-hi MatchParen term=underline cterm=underline,bold, gui=underline,bold
+autocmd ColorScheme * hi clear MatchParen
+autocmd ColorScheme * hi MatchParen term=underline cterm=underline,bold, gui=underline,bold
 
 " Statusline
 set laststatus=2
 set statusline=%1*#%n%*\ %f%2*%m%r%*\ %3*%y%*%=%#ErrorMsg#%{SyntasticStatuslineFlag()}%*\ %02.v\|%03.l/%03.L
-hi link User1 Number
-hi link User2 Boolean
-hi link User3 Identifier
+autocmd ColorScheme * hi link User1 Number
+autocmd ColorScheme * hi link User2 Boolean
+autocmd ColorScheme * hi link User3 Identifier
+
+colorscheme alduin
 
 " Hack for stupid terminals
 if $COLORTERM ==? ('gnome-terminal' || 'xterm' || 'konsole')
@@ -187,12 +189,11 @@ if $COLORTERM ==? ('gnome-terminal' || 'xterm' || 'konsole')
 endif
 
 " Buffer Autocmds
-au BufRead,BufNewFile /tmp/mutt* set ft=mail spell
+autocmd BufRead,BufNewFile /tmp/mutt* set ft=mail spell
 
 " Java
 " Run Eclipse's code formatter on save
 " autocmd FileWritePre *.java call Eclipse_format()
-
 function Eclipse_format()
     exec! '!eclipse' '-nosplash' 
                 \ '-application' 'org.eclipse.jdt.core.JavaCodeFormatter'
@@ -202,6 +203,11 @@ function Eclipse_format()
 endfunction
 
 " Plugins
+" Ack
+if executable('rg')
+    let g:ackprg = 'rg --vimgrep'
+endif
+
 " cSyntaxAfter
 autocmd! FileType c,cpp,java,php call CSyntaxAfter()
 
@@ -237,9 +243,9 @@ hi MarkologyHLu ctermfg=Cyan ctermbg=NONE guifg=Cyan guibg=NONE
 hi MarkologyHLo ctermfg=Red ctermbg=NONE guifg=Red guibg=NONE
 
 " Rainbow Parentheses
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+autocmd Syntax * RainbowParenthesesLoadRound
+autocmd Syntax * RainbowParenthesesLoadSquare
+autocmd Syntax * RainbowParenthesesLoadBraces
 
 " Rspec
 let g:RspecKeymap=0
@@ -310,7 +316,7 @@ noremap j gj
 noremap k gk
 
 " Leader Commands
-nnoremap <leader>/ :Ag
+nnoremap <leader>/ :Ack!<Space>
 nnoremap <silent><leader>bt :TagbarToggle<CR>
 nnoremap <silent><leader>fs :NoTrail<CR>
 nnoremap <silent><leader>ig :IndentGuidesToggle<CR>
