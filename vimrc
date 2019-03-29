@@ -6,7 +6,7 @@ endif
 filetype plugin indent on
 
 " Builtin macros - Why are these not defaults
-runtime! macros/matchit.vim
+" runtime! macros/matchit.vim " Now using vim-matchup
 " runtime! macros/editexisting.vim
 
 " Plug.vim
@@ -16,58 +16,59 @@ call plug#begin('~/.vim/plugged')
 Plug 'AlessandroYorba/Alduin'
 Plug 'tpope/vim-vividchalk'
 Plug 'w0ng/vim-hybrid'
+Plug 'fcpg/vim-orbital'
 
 " Language enhancement
-Plug 'artur-shaik/vim-javacomplete2'
-Plug 'c9s/perlomni.vim'
-Plug 'chikamichi/mediawiki.vim'
-Plug 'chrisbra/csv.vim'
-Plug 'hallison/vim-rdoc'
-Plug 'hdima/python-syntax'
-Plug 'kchmck/vim-coffee-script'
-Plug 'klen/python-mode'
-Plug 'vim-ruby/vim-ruby'
-" Plug 'vim-utils/vim-ruby-fold'
-Plug 'keith/rspec.vim'
-" Plug 'skwp/vim-rspec'
+Plug 'Dica-Developer/vim-jdb'
+Plug 'nelstrom/vim-textobj-rubyblock'
+Plug 'sheerun/vim-polyglot', {'do' : './build'}
+Plug 'vim-scripts/cSyntaxAfter'
+" eclim is system installed
 
 " Completion
-Plug 'ervandew/supertab'
+Plug 'maralla/completor.vim'
+Plug 'osyo-manga/vim-monster' " Ruby completion, needs rcodetools and solargraph gems
+Plug 'shougo/echodoc.vim'
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 " Misc
-Plug 'KabbAmine/zeavim.vim'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'airblade/vim-rooter'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'guns/vim-sexp'
-Plug 'jeetsukumaran/vim-markology'
-Plug 'junegunn/goyo.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
+Plug 'haya14busa/incsearch.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-user'
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'majutsushi/tagbar'
-Plug 'mhinz/vim-signify'
 Plug 'mhinz/vim-startify'
-Plug 'mikelue/vim-maven-plugin'
 Plug 'mileszs/ack.vim'
+Plug 'rkitover/vimpager'
+Plug 'tommcdo/vim-exchange'
+
+" Visual
+Plug 'andymass/vim-matchup'
+Plug 'andymass/vim-tradewinds'
+Plug 'jeetsukumaran/vim-markology'
+Plug 'majutsushi/tagbar'
+Plug 'mbbill/undotree'
+Plug 'mhinz/vim-signify'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'nelstrom/vim-textobj-rubyblock'
-Plug 'vim-scripts/cSyntaxAfter'
-Plug 'xolox/vim-easytags'
-Plug 'xolox/vim-misc'
 
 " Syntastic
 Plug 'scrooloose/syntastic'
 Plug 'myint/syntastic-extras'
 
-Plug 'tommcdo/vim-exchange'
-
 " TimPope
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-dadbod'
+Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-characterize'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-projectionist'
@@ -94,24 +95,27 @@ if has('gui_running')
     if has("balloon_eval")
         set ballooneval
     endif
-    "set guifont=Inconsolatazi4\ 8
-    set guifont=Source\ Code\ Pro\ Medium\ 7
+    set guifont=Iosevka\ Type\ Light\ 7
+    set linespace=1
+    " make gvim use the entire frame
+    set guiheadroom=0
+    autocmd GuiEnter * silent exec "!transset-df -a 0.90"
 endif
 
 "  Display/Behavior
-if $TERM ==? "rxvt-unicode-256color" || has('gui_running')
-    set cursorline
-    set cursorcolumn
-endif
-set cpoptions+=d$
+" if $TERM ==? "rxvt-unicode-256color" || has('gui_running')
+"     set cursorline
+"     set cursorcolumn
+" endif
+set cmdheight=2 " for echodoc
+set cpoptions+=nd$
 set foldmethod=marker
 set hidden
 set history=500
-set nohlsearch
+set hlsearch " :h g:incsearch#auto_nohlsearch
 set incsearch
 set nojoinspaces
 set nomore
-set nowrap
 set number
 set relativenumber
 set pumheight=8
@@ -129,6 +133,10 @@ set updatetime=1000
 set wildchar=<Tab>
 set wildmenu
 set wildmode=list:longest
+set wrap
+set breakindent
+set breakindentopt=shift:8,min:20,sbr
+set showbreak=>->
 let mapleader=","
 
 " Files
@@ -154,6 +162,7 @@ set tabstop=4
 set shiftwidth=4
 set autoindent
 set smartindent
+set tags=./tags,tags,./TAGS,TAGS,gems.tags
 
 " Spell Checking
 set spelllang=en_us
@@ -163,7 +172,7 @@ set nospell
 syntax on
 " Not all terminals support unicode yet :(
 if $TERM ==? "rxvt-unicode-256color" || has('gui_running')
-    set list listchars=tab:»\ ,trail:·,nbsp:·
+    set list listchars=tab:Â»\ ,trail:Â·,nbsp:Â·
 endif
 
 " Don't change backgrough color in terminal
@@ -181,7 +190,7 @@ autocmd ColorScheme * hi link User1 Number
 autocmd ColorScheme * hi link User2 Boolean
 autocmd ColorScheme * hi link User3 Identifier
 
-colorscheme alduin
+colorscheme jellybeans
 
 " Hack for stupid terminals
 if $COLORTERM ==? ('gnome-terminal' || 'xterm' || 'konsole')
@@ -192,15 +201,26 @@ endif
 autocmd BufRead,BufNewFile /tmp/mutt* set ft=mail spell
 
 " Java
-" Run Eclipse's code formatter on save
-" autocmd FileWritePre *.java call Eclipse_format()
-function Eclipse_format()
-    exec! '!eclipse' '-nosplash' 
-                \ '-application' 'org.eclipse.jdt.core.JavaCodeFormatter'
-                \ '-verbose'
-                \ '-config' '/home/zachs/sob/eclipse/org.eclipse.jdt.core.prefs'
-                \ shellescape(@%, 1)
-endfunction
+let g:EclimCompletionMethod = 'omnifunc'
+let g:EclimLoggingDisabled = 1
+let g:EclimProjectTreeActions = [
+            \ {'pattern': '.*', 'name': 'Edit', 'action': 'edit'},
+            \ {'pattern': '.*', 'name': 'Split', 'action': 'split'},
+            \ {'pattern': '.*', 'name': 'VSplit', 'action': 'vsplit'},
+            \ {'pattern': '.*', 'name': 'Tab', 'action': 'tablast | tabnew'}
+            \ ]
+" autocmd CursorHold *.java JavaDocPreview
+nnoremap <silent><leader>ps :ProjectsTree<CR>
+nnoremap <silent><leader>pt :ProjectTreeToggle<CR>
+nnoremap <silent><leader>pp :ProjectProblems<CR>
+nnoremap <silent><leader>jc :JavaCorrect<CR>
+nnoremap <silent><leader>jh :JavaCallHierarchy<CR>
+nnoremap <silent><leader>jd :JavaDocPreview<CR>
+vnoremap <silent><leader>jf :'<,'>JavaFormat<CR>
+nnoremap <silent><leader>jf :%JavaFormat<CR>
+nnoremap <silent><leader>ji :JavaImportOrganize<CR>
+nnoremap <silent><leader>jr :JavaRename<CR>
+nnoremap <silent><leader>js :JavaSearch<CR>
 
 " Plugins
 " Ack
@@ -208,31 +228,51 @@ if executable('rg')
     let g:ackprg = 'rg --vimgrep'
 endif
 
+" Completor
+let g:completor_java_omni_trigger = '\k\.\k*'
+let g:completor_ruby_omni_trigger = '[^. *\t]\.\w*\|\h\w*::'
+
 " cSyntaxAfter
 autocmd! FileType c,cpp,java,php call CSyntaxAfter()
+
+" CtrlP
+let g:ctrlp_working_path_mode = 0
+" g:ctrlp_root_markers is not used unless working path mode is changed for the current buffer
+let g:ctrlp_root_markers = ['.rooter', 'Rakefile', 'Gemfile', 'pom.xml', '.p4rc', '.p4ignore']
+let g:ctrlp_by_filename = 1
+let g:ctrlp_match_window = 'bottom,order:btt,min:5,max:20,results:50'
+let g:ctrlp_switch_buffer = 'ETVH'
+let g:ctrlp_tabpage_position = 'al'
+if executable("ag")
+    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -p ".p4ignore" -g ""'
+endif
+
+" DadBod
+let g:burn_local = 'mysql://remote:suseng145@localhost/burnrizzle_db'
+let g:nast_prod = 'mysql://basic_remote:P%40ssw0rd1@waterlog/nastd'
 
 " EasyAlign
 vmap <Enter> <Plug>(EasyAlign>
 nmap <Leader>a <Plug>(EasyAlign>
 
-" Easytags
-set tags=./tags,~/.workspace/*/tags
-let g:easytags_dynamic_files = 2
-let g:easytags_async = 1
-let g:easytags_resolve_links = 1
-let g:easytags_events = ['BufWritePost']
+" EchoDoc
+let g:echodoc_enable_at_startup = 1
 
-" Goyo
-let g:goyo_width = 120
-let g:goyo_height = '85%'
-let g:goyo_linenr = 1
-
-" Javacomplete2
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-let g:JavaComplete_JavaviLogfileDirectory = '/tmp'
-let g:JavaComplete_ImportDefault = -1
-let g:JavaComplete_UsePython3 = 1
-let g:JavaComplete_ImportOrder = ['com.spectralogic', 'com', 'org', 'java', 'javax']
+" incsearch
+let g:incsearch#auto_nohlsearch = 1
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+" incsearch-fuzzy
+map z/ <Plug>(incsearch-fuzzy-/)
+map z? <Plug>(incsearch-fuzzy-?)
+map zg/ <Plug>(incsearch-fuzzy-stay)
 
 " Markology
 let g:markology_textlower="\t"
@@ -246,6 +286,9 @@ hi MarkologyHLo ctermfg=Red ctermbg=NONE guifg=Red guibg=NONE
 autocmd Syntax * RainbowParenthesesLoadRound
 autocmd Syntax * RainbowParenthesesLoadSquare
 autocmd Syntax * RainbowParenthesesLoadBraces
+
+" Rooter
+let g:rooter_patterns = ['.rooter', 'Rakefile', '*.gemspec', 'Gemfile', 'pom.xml', '.git/', '.p4rc']
 
 " Rspec
 let g:RspecKeymap=0
@@ -270,16 +313,14 @@ let g:Schlepp#useShiftWidthLines = 1
 
 " Signify
 " let g:signify_vcs_list = [ 'perforce', 'subversion', 'git', 'hg' ]
+let g:signify_disable_by_default = 0
 
 " SmartSwap
 let g:SmartSwap_CheckDate = 1
 let g:SmartSwap_CheckDiff = 1
 
-" SuperTab
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
-let g:SuperTabContextTextOmniPrecedence = ['&omnifunc' , '&completefunc']
-let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
+" Startify
+let g:startify_custom_header = map(split(system('fortune -a'), '\n'), '"   ". v:val')
 
 " Syntastic
 let g:syntastic_always_populate_loc_list = 1
@@ -288,10 +329,15 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_stl_format = "%E{[E#: %e]}%W{[W#: %w]}"
-let g:syntastic_java_checkstyle_conf_file = "/home/zachs/sob/sus/checkstyle-config/checkstyle-config/src/main/resources/sustaining_checks.xml"
 
 "Use rubocop
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+
+" vim-ruby
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
+autocmd FileType ruby,eruby let g:rubycomplete_rails=1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global=1
 
 " Mappings
 cmap ` ~/
@@ -315,6 +361,12 @@ nnoremap <C-y> 4<C-y>
 noremap j gj
 noremap k gk
 
+" Show syntax highlighting group
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+
 " Leader Commands
 nnoremap <leader>/ :Ack!<Space>
 nnoremap <silent><leader>bt :TagbarToggle<CR>
@@ -335,6 +387,7 @@ nnoremap <silent><leader>tn :tabnew<CR>
 nnoremap <silent><leader>to :CtrlP<CR>
 nnoremap <silent><leader>tt :CtrlPTag<CR>
 nnoremap <silent><leader>tu :CtrlPMRU<CR>
+nnoremap <silent><leader>ut :UndotreeToggle<CR>
 nnoremap <silent><leader>ve :vsplit $MYVIMRC<CR>
 nnoremap <silent><leader>vs :source $MYVIMRC<CR>
 
@@ -352,4 +405,4 @@ vnoremap <C-V>     v
 nnoremap Q gQ
 nnoremap gQ Q
 
-" vim: set ts=4 sw=4 et fdm=marker tw=80 fo+=t
+" vim: set ts=4 sw=4 et fdm=marker tw=80 fo+=t enc=utf-8 fenc=utf-8
