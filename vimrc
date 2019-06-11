@@ -144,6 +144,9 @@ set showbreak=>->
 if !has('patch-8.1-1365')
     set nomodeline 
 endif
+if has('patch-8.1-1366')
+    set nomodelineexpr
+endif
 let mapleader=","
 
 " Files
