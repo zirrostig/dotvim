@@ -141,7 +141,7 @@ set breakindentopt=shift:8,min:20,sbr
 set showbreak=>->
 " Disable modeline unless at or above patched version
 " CVE-2019-12735 fixed in 8.1.1365
-if v:version < 801 || (v:version == 801 && !has('patch1365'))
+if !has('patch-8.1-1365')
     set nomodeline 
 endif
 let mapleader=","
