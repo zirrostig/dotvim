@@ -23,6 +23,7 @@ Plug 'Dica-Developer/vim-jdb'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'sheerun/vim-polyglot', {'do' : './build'}
 Plug 'vim-scripts/cSyntaxAfter'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " eclim is system installed
 
 " Completion
@@ -95,7 +96,7 @@ if has('gui_running')
     if has("balloon_eval")
         set ballooneval
     endif
-    set guifont=Iosevka\ Type\ Light\ 7
+    set guifont=Inconsolata-Regular:h12
     set linespace=1
     " make gvim use the entire frame
     set guiheadroom=0
@@ -107,6 +108,7 @@ endif
 "     set cursorline
 "     set cursorcolumn
 " endif
+set belloff=all " I hate the bell
 set cmdheight=2 " for echodoc
 set cpoptions+=nd$
 set foldmethod=marker
@@ -137,6 +139,11 @@ set wrap
 set breakindent
 set breakindentopt=shift:8,min:20,sbr
 set showbreak=>->
+" Disable modeline unless at or above patched version
+" CVE-2019-12735 fixed in 8.1.1365
+if v:version < 801 || (v:version == 801 && !has('patch1365'))
+    set nomodeline 
+endif
 let mapleader=","
 
 " Files
@@ -246,10 +253,6 @@ let g:ctrlp_tabpage_position = 'al'
 if executable("ag")
     let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -p ".p4ignore" -g ""'
 endif
-
-" DadBod
-let g:burn_local = 'mysql://remote:suseng145@localhost/burnrizzle_db'
-let g:nast_prod = 'mysql://basic_remote:P%40ssw0rd1@waterlog/nastd'
 
 " EasyAlign
 vmap <Enter> <Plug>(EasyAlign>
