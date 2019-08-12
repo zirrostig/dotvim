@@ -19,21 +19,23 @@ Plug 'w0ng/vim-hybrid'
 Plug 'fcpg/vim-orbital'
 
 " Language enhancement
-Plug 'Dica-Developer/vim-jdb'
-Plug 'nelstrom/vim-textobj-rubyblock'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'sheerun/vim-polyglot', {'do' : './build'}
 Plug 'vim-scripts/cSyntaxAfter'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-" eclim is system installed
+Plug 'juliosueiras/vim-terraform-completion'
+Plug 'hashivim/vim-terraform'
+Plug 'sebdah/vim-delve'
 
 " Completion
-Plug 'maralla/completor.vim'
-Plug 'osyo-manga/vim-monster' " Ruby completion, needs rcodetools and solargraph gems
-Plug 'shougo/echodoc.vim'
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+" Additional completions through CoC listed below
+" :CocInstall coc-tabnine
+" :CocInstall coc-highlight
+" :CocInstall coc-lists
 
 " Misc
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'Shougo/deol.nvim'
 Plug 'airblade/vim-rooter'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'guns/vim-sexp'
@@ -56,6 +58,7 @@ Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-signify'
 Plug 'nathanaelkane/vim-indent-guides'
+Plug 'xavierchow/vim-sequence-diagram'
 
 " Syntastic
 Plug 'scrooloose/syntastic'
@@ -64,6 +67,7 @@ Plug 'myint/syntastic-extras'
 " TimPope
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-capslock'
 Plug 'tpope/vim-dadbod'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
@@ -73,9 +77,8 @@ Plug 'tpope/vim-characterize'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-projectionist'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rake'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
@@ -210,52 +213,23 @@ endif
 " Buffer Autocmds
 autocmd BufRead,BufNewFile /tmp/mutt* set ft=mail spell
 
-" Java
-let g:EclimCompletionMethod = 'omnifunc'
-let g:EclimLoggingDisabled = 1
-let g:EclimProjectTreeActions = [
-            \ {'pattern': '.*', 'name': 'Edit', 'action': 'edit'},
-            \ {'pattern': '.*', 'name': 'Split', 'action': 'split'},
-            \ {'pattern': '.*', 'name': 'VSplit', 'action': 'vsplit'},
-            \ {'pattern': '.*', 'name': 'Tab', 'action': 'tablast | tabnew'}
-            \ ]
-" autocmd CursorHold *.java JavaDocPreview
-nnoremap <silent><leader>ps :ProjectsTree<CR>
-nnoremap <silent><leader>pt :ProjectTreeToggle<CR>
-nnoremap <silent><leader>pp :ProjectProblems<CR>
-nnoremap <silent><leader>jc :JavaCorrect<CR>
-nnoremap <silent><leader>jh :JavaCallHierarchy<CR>
-nnoremap <silent><leader>jd :JavaDocPreview<CR>
-vnoremap <silent><leader>jf :'<,'>JavaFormat<CR>
-nnoremap <silent><leader>jf :%JavaFormat<CR>
-nnoremap <silent><leader>ji :JavaImportOrganize<CR>
-nnoremap <silent><leader>jr :JavaRename<CR>
-nnoremap <silent><leader>js :JavaSearch<CR>
-
 " Plugins
 " Ack
 if executable('rg')
     let g:ackprg = 'rg --vimgrep'
 endif
 
-" Completor
-let g:completor_java_omni_trigger = '\k\.\k*'
-let g:completor_ruby_omni_trigger = '[^. *\t]\.\w*\|\h\w*::'
-
-" cSyntaxAfter
-autocmd! FileType c,cpp,java,php call CSyntaxAfter()
-
 " CtrlP
 let g:ctrlp_working_path_mode = 0
 " g:ctrlp_root_markers is not used unless working path mode is changed for the current buffer
-let g:ctrlp_root_markers = ['.rooter', 'Rakefile', 'Gemfile', 'pom.xml', '.p4rc', '.p4ignore']
+let g:ctrlp_root_markers = ['.rooter', '.git/', 'Makefile']
 let g:ctrlp_by_filename = 1
 let g:ctrlp_match_window = 'bottom,order:btt,min:5,max:20,results:50'
 let g:ctrlp_switch_buffer = 'ETVH'
 let g:ctrlp_tabpage_position = 'al'
-if executable("ag")
-    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -p ".p4ignore" -g ""'
-endif
+" if executable("rg")
+"     let g:ctrlp_user_command = 'rg %s -l --nocolor --hidden -p -g ""'
+" endif
 
 " EasyAlign
 vmap <Enter> <Plug>(EasyAlign>
@@ -263,6 +237,13 @@ nmap <Leader>a <Plug>(EasyAlign>
 
 " EchoDoc
 let g:echodoc_enable_at_startup = 1
+
+" Go-vim
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+" disable vim-go :GoDef short cut (gd)
+" this is handled by LanguageClient [LC]
+let g:go_def_mapping_enabled = 0
 
 " incsearch
 let g:incsearch#auto_nohlsearch = 1
@@ -280,6 +261,10 @@ map z/ <Plug>(incsearch-fuzzy-/)
 map z? <Plug>(incsearch-fuzzy-?)
 map zg/ <Plug>(incsearch-fuzzy-stay)
 
+" JS-Sequence-Diagram
+nmap <silent><unique><leader>td <Plug>GenerateDiagram 
+let g:generate_diagram_theme_hand = 1
+
 " Markology
 let g:markology_textlower="\t"
 let g:markology_textother="\t"
@@ -294,10 +279,7 @@ autocmd Syntax * RainbowParenthesesLoadSquare
 autocmd Syntax * RainbowParenthesesLoadBraces
 
 " Rooter
-let g:rooter_patterns = ['.rooter', 'Rakefile', '*.gemspec', 'Gemfile', 'pom.xml', '.git/', '.p4rc']
-
-" Rspec
-let g:RspecKeymap=0
+let g:rooter_patterns = ['.rooter', '.git/', 'Makefile' ]
 
 " Schlepp
 vmap <unique> <up>    <Plug>SchleppUp
@@ -318,8 +300,7 @@ let g:Schlepp#reindent = 1
 let g:Schlepp#useShiftWidthLines = 1
 
 " Signify
-" let g:signify_vcs_list = [ 'perforce', 'subversion', 'git', 'hg' ]
-let g:signify_disable_by_default = 0
+let g:signify_vcs_list = [ 'git' ]
 
 " SmartSwap
 let g:SmartSwap_CheckDate = 1
@@ -335,15 +316,6 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_stl_format = "%E{[E#: %e]}%W{[W#: %w]}"
-
-"Use rubocop
-let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-
-" vim-ruby
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
-autocmd FileType ruby,eruby let g:rubycomplete_rails=1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global=1
 
 " Mappings
 cmap ` ~/
@@ -378,6 +350,7 @@ nnoremap <leader>/ :Ack!<Space>
 nnoremap <silent><leader>bt :TagbarToggle<CR>
 nnoremap <silent><leader>fs :NoTrail<CR>
 nnoremap <silent><leader>ig :IndentGuidesToggle<CR>
+nnoremap <silent><leader>gd :SignifyDiff<CR>
 nnoremap <silent><leader>ra :RunSpecs
 nnoremap <silent><leader>ri :RunSpecLine
 nnoremap <silent><leader>rr :RunSpec
@@ -396,10 +369,18 @@ nnoremap <silent><leader>tu :CtrlPMRU<CR>
 nnoremap <silent><leader>ut :UndotreeToggle<CR>
 nnoremap <silent><leader>ve :vsplit $MYVIMRC<CR>
 nnoremap <silent><leader>vs :source $MYVIMRC<CR>
-
-" Toggles
-noremap <silent><F4> :set list!<CR>
+nmap <leader><leader>cR <Plug>(coc-rename)
+nmap <silent><leader>cd <Plug>(coc-definition)
+nmap <silent><leader>ci <Plug>(coc-implementation)
+nmap <silent><leader>cr <Plug>(coc-references) 
+nmap <silent><leader>cy <Plug>(coc-type-definition)
+                                               
+" Toggles                                      
+noremap <silent><F4> :set list!<CR>            
 inoremap <silent><F4> :set list!<CR>
+
+" Save with sudo and tee
+cmap w!! ForceSave
 
 " Swaps
 nnoremap    v   <C-V>
@@ -410,5 +391,8 @@ vnoremap <C-V>     v
 " Better Ex mode
 nnoremap Q gQ
 nnoremap gQ Q
+
+" Presentation mode so my coworkers can read
+noremap <F3> :Presentation<CR>
 
 " vim: set ts=4 sw=4 et fdm=marker tw=80 fo+=t enc=utf-8 fenc=utf-8

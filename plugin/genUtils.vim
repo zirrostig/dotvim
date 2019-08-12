@@ -1,18 +1,18 @@
 "Removes all trailing white space in current buffer
-fun! RemoveTrailingWhiteSpace()
+function! RemoveTrailingWhiteSpace()
     call CurPos("save")
     %s/\s*$//
     call CurPos("restore")
-endfun
+endfunction
 
 "Lets you save a file you forgot to open with sudo
-fun! SaveReadOnlyFile()
+function! SaveReadOnlyFile()
     w !sudo tee %
-endfun
+endfunction
 
 "Saves/Restores Cursor position
 "http://vim.wikia.com/wiki/Maintain_cursor_and_screen_position
-function CurPos(action)
+function! CurPos(action)
   if a:action == "save"
     let b:saveve = &virtualedit
     let b:savesiso = &sidescrolloff
@@ -52,7 +52,7 @@ endfunction
 
 
 "Mostly from http://learnvimscriptthehardway.stevelosh.com/chapters/38.html
-function QuickFixToggle()
+function! QuickFixToggle()
     if !exists("g:genUtils_QFix")
         let g:genUtils_QFix = 0
     endif
@@ -67,9 +67,56 @@ function QuickFixToggle()
     endif
 endfunction
 
+"Font size changing, these are taken from
+"https://vim.fandom.com/wiki/Change_font_size_quickly modified to fit my use
+"case, these are probably very specific to my current setup and may break in
+"the future
+let s:fontPattern = '^\(.*\):h\([1-9][0-9]*\)$'
+function! GetFontName()
+    if has("gui_running")
+        return substitute(&guifont, s:fontPattern, '\1', '')
+    else
+        echoerr "You need to run a GUI version of Vim to use this function."
+    endif
+endfunction
+
+function! GetFontSize()
+    if has("gui_running")
+        return substitute(&guifont, s:fontPattern, '\2', '')
+    else
+        echoerr "You need to run a GUI version of Vim to use this function."
+    endif
+endfunction
+
+function! SetFontSize(size)
+    if has("gui_running")
+        let fontname = GetFontName()
+        let newfont = fontname . ":h" . a:size
+        let &guifont = newfont
+    else
+        echoerr "You need to run a GUI version of Vim to use this function."
+    endif
+endfunction
+
+"For when I'm screensharing
+function! Presentation()
+    if !exists("g:genUtils_Pres")
+        let g:genUtils_Pres = 0
+    endif
+    if g:genUtils_Pres
+        let g:genUtils_Pres = 0
+        set relativenumber
+        call SetFontSize(12)
+    else
+        let g:genUtils_Pres = 1
+        set norelativenumber
+        call SetFontSize(16)
+    endif
+endfunction
+
 
 "Set up commands to make calling above functions easier
 command! -nargs=0 NoTrail call RemoveTrailingWhiteSpace()
 command! -nargs=0 ForceSave call SaveReadOnlyFile()
 command! -nargs=0 QFixToggle call QuickFixToggle()
-cmap w!! call SaveReadOnlyFile()
+command! -nargs=0 PresentationToggle call Presentation()
