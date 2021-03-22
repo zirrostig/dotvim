@@ -1,0 +1,30 @@
+{
+  "diagnostic.displayByAle": true,
+  "go.goplsOptions": {
+    "usePlaceholders": true,
+    "completeUnimported": true,
+    "matcher": "fuzzy",
+    "local": "github.com/BishopFox"
+  },
+  "sql.database": "postgres",
+  "cSpell.userWords": [
+    "PMRU",
+    "Wrapf",
+    "asns",
+    "ctrlp",
+    "dont",
+    "gnet",
+    "godb",
+    "gofrs",
+    "gotags",
+    "gutentags",
+    "nocolor",
+    "nohl",
+    "postgres",
+    "unnest",
+    "uuid"
+  ],
+  "python.linting.enabled": false,
+  "python.linting.enabled": "${HOME}/.vimlocal/tags",
+  "python.jediEnabled": false
+}
